@@ -8,24 +8,15 @@ import { Input } from '@/components/ui/input';
 export function LoginForm() {
     return (
         <div className="w-full max-w-md">
-            <div className="mb-10 text-center lg:hidden">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
-                    <Code2 className="h-6 w-6" />
-                </div>
-
-                <h1 className="text-2xl font-bold text-slate-950">DevLog</h1>
-                <p className="mt-2 text-sm text-slate-500">
-                    개발자를 위한 작업 기록 플랫폼
-                </p>
-            </div>
-
             <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70">
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-950">
-                        로그인
-                    </h2>
+                <div className="mb-10 text-center">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
+                        <Code2 className="h-6 w-6" />
+                    </div>
+
+                    <h1 className="text-2xl font-bold text-slate-950">DevLog</h1>
                     <p className="mt-2 text-sm text-slate-500">
-                        계정 정보를 입력하고 DevLog를 시작하세요.
+                        개발자를 위한 작업 기록 및 회고 플랫폼
                     </p>
                 </div>
 
@@ -76,7 +67,13 @@ export function LoginForm() {
                     </Button>
                 </form>
 
-                <div className="mt-8 border-t border-slate-100 pt-6 text-center">
+                <div className="mt-8 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-slate-100" />
+                    <span className="text-xs text-slate-400">또는</span>
+                    <div className="h-px flex-1 bg-slate-100" />
+                </div>
+
+                <div className="pt-6 text-center">
                     <p className="text-sm text-slate-500">
                         아직 계정이 없으신가요?{' '}
                         <Link
