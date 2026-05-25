@@ -5,7 +5,7 @@ export async function login(data: LoginRequest): Promise<AuthResponse> {
   const response = await apiClient.post('/api/login', data);
   const accessToken = response.headers['authorization'];
   if (!accessToken) throw new Error('No access token in response');
-  return { accessToken };
+  return { accessToken, user: response.data.body };
 }
 
 export async function register(data: RegisterRequest): Promise<void> {

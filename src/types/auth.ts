@@ -9,6 +9,13 @@ export interface RegisterRequest {
   password: string;
 }
 
+export interface User {
+  userId: number;
+  email: string;
+  name: string;
+}
+
 export interface AuthResponse {
   accessToken: string;
+  user: User;
 }

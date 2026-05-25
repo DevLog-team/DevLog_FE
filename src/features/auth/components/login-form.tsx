@@ -10,6 +10,7 @@ import { Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/auth/api';
+import { useAuthStore } from '@/store/auth';
 
 const schema = z.object({
     email: z.string().email('올바른 이메일 형식이 아닙니다'),
@@ -20,6 +21,7 @@ type LoginFormValues = z.infer<typeof schema>;
 
 export function LoginForm() {
     const router = useRouter();
+    const setUser = useAuthStore((s) => s.setUser);
     const [apiError, setApiError] = useState('');
 
     const {
@@ -33,8 +35,9 @@ export function LoginForm() {
     const onSubmit = async (data: LoginFormValues) => {
         setApiError('');
         try {
-            const { accessToken } = await login(data);
+            const { accessToken, user } = await login(data);
             document.cookie = `access_token=${accessToken}; path=/`;
+            setUser(user);
             router.push('/dashboard');
         } catch {
             setApiError('이메일 또는 비밀번호가 올바르지 않습니다.');
