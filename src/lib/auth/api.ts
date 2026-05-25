@@ -4,6 +4,7 @@ import type { LoginRequest, RegisterRequest, AuthResponse } from '@/types/auth';
 export async function login(data: LoginRequest): Promise<AuthResponse> {
   const response = await apiClient.post('/api/login', data);
   const accessToken = response.headers['authorization'];
+  if (!accessToken) throw new Error('No access token in response');
   return { accessToken };
 }
 
