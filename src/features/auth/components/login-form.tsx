@@ -1,11 +1,46 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { login } from '@/lib/auth/api';
+
+const schema = z.object({
+    email: z.string().email('올바른 이메일 형식이 아닙니다'),
+    password: z.string().min(1, '비밀번호를 입력해주세요'),
+});
+
+type LoginFormValues = z.infer<typeof schema>;
 
 export function LoginForm() {
+    const router = useRouter();
+    const [apiError, setApiError] = useState('');
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormValues>({
+        resolver: zodResolver(schema),
+    });
+
+    const onSubmit = async (data: LoginFormValues) => {
+        setApiError('');
+        try {
+            const { accessToken } = await login(data);
+            document.cookie = `access_token=${accessToken}; path=/`;
+            router.push('/dashboard');
+        } catch {
+            setApiError('이메일 또는 비밀번호가 올바르지 않습니다.');
+        }
+    };
+
     return (
         <div className="w-full max-w-md">
             <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70">
@@ -20,13 +55,15 @@ export function LoginForm() {
                     </p>
                 </div>
 
-                <form className="space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     <Input
                         id="email"
                         label="이메일"
                         type="email"
                         placeholder="devlog@example.com"
                         autoComplete="email"
+                        errorMessage={errors.email?.message}
+                        {...register('email')}
                     />
 
                     <div className="space-y-2">
@@ -51,19 +88,17 @@ export function LoginForm() {
                             type="password"
                             placeholder="비밀번호를 입력하세요"
                             autoComplete="current-password"
+                            errorMessage={errors.password?.message}
+                            {...register('password')}
                         />
                     </div>
 
-                    <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
-                        <input
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        로그인 상태 유지
-                    </label>
+                    {apiError && (
+                        <p className="text-sm font-medium text-red-500">{apiError}</p>
+                    )}
 
-                    <Button type="submit" size="lg" className="w-full">
-                        로그인
+                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? '로그인 중...' : '로그인'}
                     </Button>
                 </form>
 
